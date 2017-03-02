@@ -1,0 +1,16 @@
+extrapol.gev            Spatial extrapolation of GEV parameters with
+                        the HKEVP
+extrapol.return.level   Spatial extrapolation of a return level.
+hkevp                   A hierarchical model for spatial extreme values
+hkevp.expmeasure        Exponent measure of the HKEVP
+hkevp.fit               Fitting procedure of the HKEVP with MCMC
+                        algorithm
+hkevp.predict           Predictive distribution of the max-stable
+                        process at target positions.
+hkevp.rand              Simulation of the HKEVP
+latent.fit              Fitting procedure of the latent variable model
+mcmc.fun                Point estimates of HKEVP fit
+mcmc.plot               Markov chains plotting
+mcmc_hkevp              C routine for fitting either the HKEVP or the
+                        latent variable model with MCMC.
+return.level            The associated return level

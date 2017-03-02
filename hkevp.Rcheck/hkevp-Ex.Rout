@@ -1,0 +1,708 @@
+
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "hkevp"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('hkevp')
+Loading required package: Rcpp
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("extrapol.gev")
+> ### * extrapol.gev
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: extrapol.gev
+> ### Title: Spatial extrapolation of GEV parameters with the HKEVP
+> ### Aliases: extrapol.gev
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- 0
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, sites, loc, scale, shape, alpha, tau)
+> 
+> # HKEVP fit:
+> fit <- hkevp.fit(ysim, sites, niter = 1000)
+MCMC begins...
+Iter 100: -160.868
+Iter 200: -154.534
+Iter 300: -163.397
+Iter 400: -163.429
+Iter 500: -161.106
+Iter 600: -164.107
+Iter 700: -157.346
+Iter 800: -167.24
+Iter 900: -160.432
+Iter 1000: -149.814
+
+Time elapsed:
+A    : 0.289119 sec (29.2248 %)
+B    : 0.115137 sec (11.6383 %)
+ALPHA: 0.0943544 sec (9.53752 %)
+TAU  : 0.0360229 sec (3.64126 %)
+GEV  : 0.454663 sec (45.9582 %)
+----------------
+TOTAL: 0.989296 sec
+> 
+> ## Extrapolation:
+> targets <- matrix(1.5, 1, 2)
+> gev.targets <- extrapol.gev(fit, targets)
+> 
+> ## True vs predicted:
+> predicted <- sapply(gev.targets, median)
+> sd.predict <- sapply(gev.targets, sd)
+> true <- c(targets[,1]*10, scale, shape)
+> # cbind(true, predicted, sd.predict)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("extrapol.return.level")
+> ### * extrapol.return.level
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: extrapol.return.level
+> ### Title: Spatial extrapolation of a return level.
+> ### Aliases: extrapol.return.level
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> knots <- sites
+> loc <- sites[,1]*10
+> scale <- 1
+> shape <- .2
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, knots, loc, scale, shape, alpha, tau)
+> 
+> # HKEVP fit:
+> fit <- hkevp.fit(ysim, sites, niter = 1000)
+MCMC begins...
+Iter 100: -130.793
+Iter 200: -95.2374
+Iter 300: -92.5551
+Iter 400: -86.356
+Iter 500: -91.9305
+Iter 600: -93.938
+Iter 700: -88.5098
+Iter 800: -88.8873
+Iter 900: -79.2607
+Iter 1000: -78.2298
+
+Time elapsed:
+A    : 0.293526 sec (28.9358 %)
+B    : 0.118988 sec (11.7299 %)
+ALPHA: 0.0969589 sec (9.55822 %)
+TAU  : 0.0367615 sec (3.62396 %)
+GEV  : 0.468169 sec (46.1521 %)
+----------------
+TOTAL: 1.0144 sec
+> 
+> ## Extrapolation of the 100-years return level (may need more iterations and burn-in/nthin):
+> targets <- as.matrix(expand.grid(1.5:2.5,1.5:2.5))
+> pred.sample <- extrapol.return.level(100, fit, targets)
+> pred.mean <- apply(pred.sample, 2, mean)
+> pred.sd <- apply(pred.sample, 2, sd)
+> true <- return.level(100, targets[,1]*10, scale, shape)
+> # cbind(true, pred.mean, pred.sd)
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hkevp.expmeasure")
+> ### * hkevp.expmeasure
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hkevp.expmeasure
+> ### Title: Exponent measure of the HKEVP
+> ### Aliases: hkevp.expmeasure
+> 
+> ### ** Examples
+> 
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- 0
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, sites, loc, scale, shape, alpha, tau)
+> 
+> # HKEVP fit:
+> fit <- hkevp.fit(ysim, sites, niter = 1000)
+MCMC begins...
+Iter 100: -160.868
+Iter 200: -154.534
+Iter 300: -163.397
+Iter 400: -163.429
+Iter 500: -161.106
+Iter 600: -164.107
+Iter 700: -157.346
+Iter 800: -167.24
+Iter 900: -160.432
+Iter 1000: -149.814
+
+Time elapsed:
+A    : 0.296032 sec (29.1421 %)
+B    : 0.118987 sec (11.7133 %)
+ALPHA: 0.0973685 sec (9.58518 %)
+TAU  : 0.0369477 sec (3.63722 %)
+GEV  : 0.466487 sec (45.9221 %)
+----------------
+TOTAL: 1.01582 sec
+> 
+> predict.em <- hkevp.expmeasure(1, fit = fit)
+> true.em <- hkevp.expmeasure(1, sites, sites, alpha, tau)
+> # plot(predict.em, ylim = range(predict.em, true.em), type = "l")
+> # abline(h = true.em, col = 2, lwd = 2)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hkevp.fit")
+> ### * hkevp.fit
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hkevp.fit
+> ### Title: Fitting procedure of the HKEVP with MCMC algorithm
+> ### Aliases: hkevp.fit
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> set.seed(1)
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- 0
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, sites, loc, scale, shape, alpha, tau)
+> 
+> # HKEVP fit:
+> fit <- latent.fit(ysim, sites, niter = 1000)
+MCMC begins...
+Iter 100: -235.348
+Iter 200: -232.186
+Iter 300: -222.893
+Iter 400: -218.441
+Iter 500: -214.766
+Iter 600: -211.698
+Iter 700: -214.058
+Iter 800: -215.566
+Iter 900: -212.794
+Iter 1000: -212.963
+
+Time elapsed: 0.261609 sec
+----------------
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hkevp.predict")
+> ### * hkevp.predict
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hkevp.predict
+> ### Title: Predictive distribution of the max-stable process at target
+> ###   positions.
+> ### Aliases: hkevp.predict
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> targets <- as.matrix(expand.grid(1.5:2.5,1.5:2.5))
+> all.pos <- rbind(sites, targets)
+> knots <- sites
+> loc <- all.pos[,1]*10
+> scale <- 3
+> shape <- 0
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, all.pos, knots, loc, scale, shape, alpha, tau)
+> yobs <- ysim[,1:9]
+> 
+> # HKEVP fit (omitting first site, used as target):
+> fit <- hkevp.fit(yobs, sites, niter = 1000)
+MCMC begins...
+Iter 100: -178.195
+Iter 200: -162.009
+Iter 300: -158.912
+Iter 400: -162.91
+Iter 500: -161.873
+Iter 600: -159.34
+Iter 700: -161.312
+Iter 800: -161.516
+Iter 900: -159.401
+Iter 1000: -160.729
+
+Time elapsed:
+A    : 0.289056 sec (29.2873 %)
+B    : 0.114446 sec (11.5957 %)
+ALPHA: 0.0952795 sec (9.65375 %)
+TAU  : 0.0361581 sec (3.66355 %)
+GEV  : 0.452029 sec (45.7998 %)
+----------------
+TOTAL: 0.986969 sec
+> 
+> # Extrapolation:
+> ypred <- hkevp.predict(fit, targets, predict.type = "kriging")
+> 
+> # Plot of the density and the true value for 4 first realizations:
+> # par(mfrow = c(2, 2))
+> # plot(density(ypred[1,1,]), main = "Target 1 / Year 1")
+> # abline(v = ysim[1,10], col = 2, lwd = 2)
+> # plot(density(ypred[2,1,]), main = "Target 1 / Year 2")
+> # abline(v = ysim[2,10], col = 2, lwd = 2)
+> # plot(density(ypred[1,2,]), main = "Target 2 / Year 1")
+> # abline(v = ysim[1,11], col = 2, lwd = 2)
+> # plot(density(ypred[2,2,]), main = "Target 2 / Year 2")
+> # abline(v = ysim[2,11], col = 2, lwd = 2)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hkevp.rand")
+> ### * hkevp.rand
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hkevp.rand
+> ### Title: Simulation of the HKEVP
+> ### Aliases: hkevp.rand
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- 0
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, sites, loc, scale, shape, alpha, tau)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("latent.fit")
+> ### * latent.fit
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: latent.fit
+> ### Title: Fitting procedure of the latent variable model
+> ### Aliases: latent.fit
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:4,1:4))
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- .2
+> alpha <- 1
+> tau <- 2
+> ysim <- hkevp.rand(15, sites, sites, loc, scale, shape, alpha, tau)
+> 
+> # Latent Variable Model fit:
+> set.seed(1)
+> fit <- latent.fit(ysim, sites, niter = 10000, nburn = 5000, nthin = 5)
+MCMC begins...
+Iter 1000: -683.382
+Iter 2000: -684.267
+Iter 3000: -691.661
+Iter 4000: -692.048
+Iter 5000: -682.409
+Iter 6000: -685.817
+Iter 7000: -695.142
+Iter 8000: -687.337
+Iter 9000: -692.369
+Iter 10000: -683.038
+
+Time elapsed: 32.3728 sec
+----------------
+> 
+> 
+> 
+> mcmc.plot(fit, TRUE)
+> par(mfrow = c(2,2))
+> apply(fit$GEV[,1,], 1, acf)
+[[1]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.497  0.351  0.223  0.182  0.145  0.106  0.080  0.089  0.084  0.089 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.078  0.107  0.079  0.055  0.024  0.026 -0.017 -0.019  0.033  0.019 -0.025 
+    22     23     24     25     26     27     28     29     30 
+-0.072 -0.057 -0.024 -0.032 -0.026 -0.066 -0.046 -0.045 -0.051 
+
+[[2]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.398  0.230  0.160  0.093  0.044  0.038  0.049  0.047  0.028  0.025 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.042  0.072  0.063  0.000 -0.007  0.051  0.040  0.034  0.012 -0.003 -0.031 
+    22     23     24     25     26     27     28     29     30 
+-0.067 -0.050 -0.034 -0.034 -0.003 -0.009 -0.055 -0.009 -0.035 
+
+[[3]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.368  0.245  0.153  0.080  0.086  0.075  0.061  0.040 -0.002 -0.001 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.009  0.002 -0.042 -0.027  0.009 -0.022  0.016  0.018  0.025 -0.020 -0.022 
+    22     23     24     25     26     27     28     29     30 
+-0.042 -0.038 -0.041  0.003  0.008 -0.006  0.003  0.021 -0.001 
+
+[[4]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.511  0.325  0.257  0.201  0.170  0.077  0.076  0.077  0.042 -0.028 
+    11     12     13     14     15     16     17     18     19     20     21 
+-0.049 -0.061 -0.041 -0.053 -0.044 -0.029 -0.033 -0.055 -0.040 -0.034 -0.064 
+    22     23     24     25     26     27     28     29     30 
+-0.077 -0.091 -0.086 -0.087 -0.086 -0.084 -0.041 -0.022 -0.022 
+
+[[5]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.407  0.287  0.207  0.171  0.131  0.106  0.128  0.100  0.091  0.056 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.034  0.022  0.017  0.040  0.019  0.006 -0.022 -0.015 -0.020 -0.066 -0.025 
+    22     23     24     25     26     27     28     29     30 
+-0.006  0.001 -0.008  0.034 -0.012 -0.007 -0.054 -0.043 -0.073 
+
+[[6]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.433  0.252  0.204  0.150  0.097  0.057  0.053  0.030 -0.040 -0.070 
+    11     12     13     14     15     16     17     18     19     20     21 
+-0.044 -0.033 -0.056 -0.073 -0.068 -0.070 -0.035 -0.038 -0.046 -0.037  0.013 
+    22     23     24     25     26     27     28     29     30 
+-0.008 -0.046 -0.016  0.042  0.011 -0.026 -0.043 -0.053 -0.067 
+
+[[7]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.378  0.186  0.084  0.106  0.034 -0.008 -0.015 -0.035 -0.032 -0.026 
+    11     12     13     14     15     16     17     18     19     20     21 
+-0.051 -0.061 -0.012  0.028  0.014  0.016  0.006  0.012  0.001  0.051  0.020 
+    22     23     24     25     26     27     28     29     30 
+-0.038 -0.028  0.015  0.012 -0.010  0.009 -0.008 -0.062 -0.078 
+
+[[8]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.386  0.224  0.147  0.099  0.091  0.066  0.067  0.067  0.075  0.079 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.102  0.048  0.040  0.073  0.054  0.034  0.023  0.009  0.032  0.016  0.033 
+    22     23     24     25     26     27     28     29     30 
+ 0.019 -0.013 -0.019  0.002  0.017  0.003  0.013  0.018  0.000 
+
+[[9]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.423  0.222  0.188  0.186  0.125  0.011  0.013  0.055  0.072  0.064 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.057  0.064  0.082  0.020 -0.046 -0.038 -0.017 -0.002 -0.039  0.006  0.053 
+    22     23     24     25     26     27     28     29     30 
+-0.027 -0.022 -0.028 -0.026 -0.006 -0.039 -0.057 -0.054 -0.041 
+
+[[10]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.496  0.345  0.271  0.221  0.184  0.190  0.147  0.109  0.072  0.060 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.066  0.072  0.071  0.029 -0.004 -0.005 -0.013 -0.037 -0.052 -0.034 -0.040 
+    22     23     24     25     26     27     28     29     30 
+-0.072 -0.104 -0.104 -0.076 -0.071 -0.049 -0.062 -0.071 -0.082 
+
+[[11]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.522  0.341  0.281  0.236  0.181  0.107  0.104  0.092  0.104  0.068 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.086  0.075  0.061  0.050  0.068  0.035  0.075  0.076  0.019  0.007 -0.039 
+    22     23     24     25     26     27     28     29     30 
+-0.036 -0.036 -0.053 -0.082 -0.094 -0.052 -0.049 -0.054 -0.058 
+
+[[12]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.350  0.248  0.203  0.153  0.105  0.148  0.102  0.086  0.128  0.070 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.020  0.054  0.034 -0.004  0.011  0.031  0.026  0.066  0.072  0.026  0.035 
+    22     23     24     25     26     27     28     29     30 
+ 0.025  0.013  0.035  0.058  0.007 -0.007 -0.012 -0.035 -0.042 
+
+[[13]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.510  0.368  0.215  0.187  0.177  0.161  0.140  0.133  0.115  0.120 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.095  0.084  0.032  0.030  0.034 -0.013  0.003 -0.008  0.005  0.035  0.034 
+    22     23     24     25     26     27     28     29     30 
+ 0.032  0.026 -0.006  0.014 -0.030 -0.035 -0.054 -0.048 -0.037 
+
+[[14]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.462  0.317  0.194  0.147  0.148  0.090  0.087  0.054  0.015  0.062 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.038  0.079  0.040 -0.038 -0.022 -0.019 -0.008  0.034  0.048  0.026  0.041 
+    22     23     24     25     26     27     28     29     30 
+ 0.051 -0.003 -0.007  0.001 -0.006 -0.029 -0.036 -0.004 -0.028 
+
+[[15]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.468  0.294  0.192  0.107  0.069  0.059  0.040  0.042  0.065  0.052 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.064  0.001  0.012 -0.003  0.027  0.055  0.069  0.084  0.056  0.027  0.041 
+    22     23     24     25     26     27     28     29     30 
+ 0.047  0.021  0.006  0.027  0.032  0.025  0.034  0.027 -0.024 
+
+[[16]]
+
+Autocorrelations of series ‘newX[, i]’, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000  0.492  0.269  0.210  0.139  0.085  0.087  0.090  0.110  0.071  0.012 
+    11     12     13     14     15     16     17     18     19     20     21 
+-0.006 -0.013 -0.044 -0.046  0.024  0.018  0.009  0.004  0.017  0.003 -0.007 
+    22     23     24     25     26     27     28     29     30 
+ 0.012  0.018  0.041  0.059  0.061  0.047  0.018  0.005 -0.041 
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("mcmc.fun")
+> ### * mcmc.fun
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mcmc.fun
+> ### Title: Point estimates of HKEVP fit
+> ### Aliases: mcmc.fun
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> knots <- sites
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- .2
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, knots, loc, scale, shape, alpha, tau)
+> 
+> # HKEVP fit:
+> fit <- hkevp.fit(ysim, sites, niter = 1000)
+MCMC begins...
+Iter 100: -170.305
+Iter 200: -169.725
+Iter 300: -169.24
+Iter 400: -173.005
+Iter 500: -168.013
+Iter 600: -167.306
+Iter 700: -167.484
+Iter 800: -154.153
+Iter 900: -154.462
+Iter 1000: -149.807
+
+Time elapsed:
+A    : 0.349697 sec (29.0043 %)
+B    : 0.14098 sec (11.6931 %)
+ALPHA: 0.115017 sec (9.53967 %)
+TAU  : 0.0434585 sec (3.60449 %)
+GEV  : 0.556522 sec (46.1585 %)
+----------------
+TOTAL: 1.20568 sec
+> 
+> # Posterior median and standard deviation:
+> # mcmc.fun(fit, median)
+> # mcmc.fun(fit, sd)
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("mcmc.plot")
+> ### * mcmc.plot
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mcmc.plot
+> ### Title: Markov chains plotting
+> ### Aliases: mcmc.plot
+> 
+> ### ** Examples
+> 
+> # Simulation of HKEVP:
+> sites <- as.matrix(expand.grid(1:3,1:3))
+> knots <- sites
+> loc <- sites[,1]*10
+> scale <- 3
+> shape <- .2
+> alpha <- .4
+> tau <- 1
+> ysim <- hkevp.rand(10, sites, knots, loc, scale, shape, alpha, tau)
+> 
+> # HKEVP fit:
+> fit <- hkevp.fit(ysim, sites, niter = 1000)
+MCMC begins...
+Iter 100: -170.305
+Iter 200: -169.725
+Iter 300: -169.24
+Iter 400: -173.005
+Iter 500: -168.013
+Iter 600: -167.306
+Iter 700: -167.484
+Iter 800: -154.153
+Iter 900: -154.462
+Iter 1000: -149.807
+
+Time elapsed:
+A    : 0.348189 sec (29.1365 %)
+B    : 0.140085 sec (11.7223 %)
+ALPHA: 0.112603 sec (9.42265 %)
+TAU  : 0.0432124 sec (3.61601 %)
+GEV  : 0.550939 sec (46.1025 %)
+----------------
+TOTAL: 1.19503 sec
+> 
+> # Markov chains plot:
+> # mcmc.plot(fit)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("return.level")
+> ### * return.level
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: return.level
+> ### Title: The associated return level
+> ### Aliases: return.level
+> 
+> ### ** Examples
+> 
+> return.level(period = 100, loc = 1, scale = 1, shape = 1)
+[1] 99.49916
+> return.level(period = 200, loc = 1:10, scale = 1, shape = 0)
+ [1]  6.295812  7.295812  8.295812  9.295812 10.295812 11.295812 12.295812
+ [8] 13.295812 14.295812 15.295812
+> 
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  49.072 69.456 41.391 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

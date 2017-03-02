@@ -1,0 +1,13 @@
+*.log
+*.aux
+*.out
+*.bbl
+*.blg
+*.Rhistory
+*.db
+*.synctex.gz
+RcppExports.R
+*.o
+*.so
+.Rproj.user
+*~

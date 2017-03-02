@@ -1,0 +1,15 @@
+hkevp-package	hkevp
+extrapol.gev	extrapol.gev
+extrapol.return.level	extrapol.return.level
+hkevp	hkevp
+hkevp.expmeasure	hkevp.expmeasure
+hkevp.fit	hkevp.fit
+hkevp.predict	hkevp.predict
+hkevp.rand	hkevp.rand
+latent.fit	latent.fit
+mcmc.fun	mcmc.fun
+mcmc.plot	mcmc.plot
+mcmc_deponly	MCMC_cppfun
+mcmc_hkevp	MCMC_cppfun
+mcmc_latent	MCMC_cppfun
+return.level	return.level
